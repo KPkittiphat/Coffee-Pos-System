@@ -26,7 +26,6 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // Set modern look and feel
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -35,14 +34,11 @@ public class MainFrame extends JFrame {
                 }
             }
         } catch (Exception e) {
-            // Use default look and feel
         }
 
-        // Set application icon (keep this for window icon)
         try {
             setIconImage(IconManager.getCartIcon().getImage());
         } catch (Exception e) {
-            // Icon not available, continue without it
         }
 
         // Set background color
@@ -110,7 +106,7 @@ public class MainFrame extends JFrame {
         footerPanel.setBackground(IconManager.SECONDARY_COLOR);
         footerPanel.setPreferredSize(new Dimension(0, 40));
 
-        JLabel footerLabel = new JLabel("© 2024 Coffe POS System - Ready to serve!");
+        JLabel footerLabel = new JLabel("© 2025 Coffe POS System - Ready to serve! ");
         footerLabel.setFont(new Font("Segoe UI", Font.ITALIC, 12));
         footerLabel.setForeground(Color.WHITE);
 

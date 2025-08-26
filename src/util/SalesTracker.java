@@ -20,7 +20,6 @@ public class SalesTracker {
         createSalesDirectory();
     }
 
-    // Helper method for Java 8 compatibility (String.repeat was added in Java 11)
     private String repeat(String str, int count) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < count; i++) {

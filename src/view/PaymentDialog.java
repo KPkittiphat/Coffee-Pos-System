@@ -11,8 +11,6 @@ import java.awt.event.WindowEvent;
 
 public class PaymentDialog extends JDialog {
     private POSController controller;
-    private JLabel subtotalLabel;
-    private JLabel taxLabel;
     private JLabel totalLabel;
     private JTextField receivedField;
     private JLabel changeLabel;
@@ -26,9 +24,6 @@ public class PaymentDialog extends JDialog {
         this.controller = controller;
         this.totalAmount = totalAmount;
 
-        // Store the actual total amount including tax for payment calculations
-        double totalWithTax = totalAmount * 1.07;
-
         initializeDialog();
         createComponents();
         setupLayout();
@@ -36,10 +31,10 @@ public class PaymentDialog extends JDialog {
     }
 
     private void initializeDialog() {
-        setSize(900, 1000); // Increased size to accommodate tax breakdown information
+        setSize(700, 600); // Reduced size as VAT information is removed
         setLocationRelativeTo(getParent());
-        setResizable(true); // Allow resizing if users need to adjust for full content visibility
-        setMinimumSize(new Dimension(850, 750)); // Increased minimum size for additional tax information
+        setResizable(true);
+        setMinimumSize(new Dimension(900, 800));
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
         // Set background color
@@ -65,11 +60,10 @@ public class PaymentDialog extends JDialog {
         // Buttons panel
         JPanel buttonPanel = createButtonPanel();
 
-        // Main content panel with optimal spacing for larger dialog
-        JPanel contentPanel = new JPanel(new BorderLayout(30, 40));
+        // Main content panel with optimal spacing
+        JPanel contentPanel = new JPanel(new BorderLayout(20, 25));
         contentPanel.setBackground(IconManager.BACKGROUND_COLOR);
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(50, 60, 40, 60)); // Enhanced padding for larger dialog
-                                                                                 // with better content visibility
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 25, 40));
 
         contentPanel.add(titleLabel, BorderLayout.NORTH);
         contentPanel.add(amountPanel, BorderLayout.CENTER);
@@ -84,106 +78,44 @@ public class PaymentDialog extends JDialog {
         panel.setBackground(IconManager.CARD_COLOR);
         panel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
-                BorderFactory.createEmptyBorder(50, 60, 50, 60))); // Increased padding to ensure full content
-                                                                   // visibility
-        panel.setPreferredSize(new Dimension(750, 380)); // Increased height for additional tax information
+                BorderFactory.createEmptyBorder(30, 40, 30, 40)));
+        panel.setPreferredSize(new Dimension(550, 250));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(20, 35, 20, 35); // Adjusted spacing for additional rows
+        gbc.insets = new Insets(15, 25, 15, 25);
 
-        // Subtotal amount
+        // Total amount
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.weightx = 0.5; // Equal space distribution for better layout
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        JLabel subtotalLabelText = new JLabel("💰 Subtotal:");
-        subtotalLabelText.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
-        subtotalLabelText.setPreferredSize(new Dimension(200, 35)); // Ensure adequate width for full text
-        subtotalLabelText.setMinimumSize(new Dimension(180, 30));
-        panel.add(subtotalLabelText, gbc);
-
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.weightx = 0.5; // Equal space allocation
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        subtotalLabel = new JLabel(String.format("฿%.2f", totalAmount));
-        subtotalLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
-        subtotalLabel.setForeground(new Color(52, 73, 94)); // Dark blue-gray
-        subtotalLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        subtotalLabel.setPreferredSize(new Dimension(200, 35)); // Ensure adequate space
-        panel.add(subtotalLabel, gbc);
-
-        // Tax amount (7%)
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
         gbc.weightx = 0.5;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        JLabel taxLabelText = new JLabel("📊 Tax (7%):");
-        taxLabelText.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
-        taxLabelText.setPreferredSize(new Dimension(200, 35)); // Ensure adequate width
-        taxLabelText.setMinimumSize(new Dimension(180, 30));
-        panel.add(taxLabelText, gbc);
-
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        gbc.weightx = 0.5;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        double taxAmount = totalAmount * 0.07;
-        taxLabel = new JLabel(String.format("฿%.2f", taxAmount));
-        taxLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
-        taxLabel.setForeground(new Color(230, 126, 34)); // Orange for tax
-        taxLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        taxLabel.setPreferredSize(new Dimension(200, 35)); // Ensure adequate space
-        panel.add(taxLabel, gbc);
-
-        // Total amount (with separator line)
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 35, 10, 35);
-        JSeparator separator = new JSeparator();
-        separator.setBackground(new Color(220, 220, 220));
-        separator.setForeground(new Color(220, 220, 220));
-        panel.add(separator, gbc);
-
-        // Reset grid settings for total row
-        gbc.gridwidth = 1;
-        gbc.insets = new Insets(10, 35, 20, 35);
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.weightx = 0.5; // Equal space distribution for better layout
         gbc.fill = GridBagConstraints.HORIZONTAL;
         JLabel totalLabelText = new JLabel("💸 Total Amount:");
         totalLabelText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
-        totalLabelText.setPreferredSize(new Dimension(200, 40)); // Ensure adequate width for full text
+        totalLabelText.setPreferredSize(new Dimension(200, 40));
         totalLabelText.setMinimumSize(new Dimension(180, 35));
         panel.add(totalLabelText, gbc);
 
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.EAST;
-        gbc.weightx = 0.5; // Equal space allocation
+        gbc.weightx = 0.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        double totalWithTax = totalAmount * 1.07;
-        totalLabel = new JLabel(String.format("฿%.2f", totalWithTax));
+        totalLabel = new JLabel(String.format("฿%.2f", totalAmount));
         totalLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
         totalLabel.setForeground(IconManager.PRIMARY_COLOR);
         totalLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        totalLabel.setPreferredSize(new Dimension(200, 40)); // Ensure adequate space
+        totalLabel.setPreferredSize(new Dimension(200, 40));
         panel.add(totalLabel, gbc);
 
         // Received amount
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.weightx = 0.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         JLabel receivedLabelText = new JLabel("💵 Received Amount:");
         receivedLabelText.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
-        receivedLabelText.setPreferredSize(new Dimension(200, 40)); // Ensure adequate width
+        receivedLabelText.setPreferredSize(new Dimension(200, 40));
         receivedLabelText.setMinimumSize(new Dimension(180, 35));
         panel.add(receivedLabelText, gbc);
 
@@ -191,11 +123,11 @@ public class PaymentDialog extends JDialog {
         gbc.anchor = GridBagConstraints.EAST;
         gbc.weightx = 0.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.ipadx = 0; // Remove excessive padding that causes layout issues
-        receivedField = new JTextField(15); // Reasonable width
+        gbc.ipadx = 0;
+        receivedField = new JTextField(15);
 
-        // Enhanced styling for better visibility with proper borders
-        receivedField.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24)); // Large but reasonable font
+        // Enhanced styling for better visibility
+        receivedField.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
         receivedField.setBackground(Color.WHITE);
         receivedField.setForeground(new Color(0, 0, 0));
         receivedField.setCaretColor(IconManager.PRIMARY_COLOR);
@@ -204,54 +136,52 @@ public class PaymentDialog extends JDialog {
 
         // Set placeholder behavior
         receivedField.setText("Enter amount...");
-        receivedField.setForeground(new Color(150, 150, 150)); // Gray placeholder text
+        receivedField.setForeground(new Color(150, 150, 150));
 
         // Add focus listener for placeholder and visual feedback
         receivedField.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {
-                // Clear placeholder text and set normal styling
                 if (receivedField.getText().equals("Enter amount...")) {
                     receivedField.setText("");
-                    receivedField.setForeground(new Color(0, 0, 0)); // Black text
+                    receivedField.setForeground(new Color(0, 0, 0));
                 }
-                receivedField.setBackground(new Color(255, 255, 240)); // Light cream when focused
+                receivedField.setBackground(new Color(255, 255, 240));
                 receivedField.setBorder(BorderFactory.createCompoundBorder(
                         BorderFactory.createLineBorder(IconManager.PRIMARY_COLOR, 2),
-                        BorderFactory.createEmptyBorder(12, 15, 12, 15)));
+                        BorderFactory.createEmptyBorder(8, 12, 8, 12)));
             }
 
             @Override
             public void focusLost(java.awt.event.FocusEvent e) {
-                // Restore placeholder if field is empty
                 if (receivedField.getText().trim().isEmpty()) {
                     receivedField.setText("Enter amount...");
-                    receivedField.setForeground(new Color(150, 150, 150)); // Gray placeholder text
+                    receivedField.setForeground(new Color(150, 150, 150));
                 }
                 receivedField.setBackground(Color.WHITE);
                 receivedField.setBorder(BorderFactory.createCompoundBorder(
                         BorderFactory.createLineBorder(new Color(200, 200, 200), 2),
-                        BorderFactory.createEmptyBorder(12, 15, 12, 15)));
+                        BorderFactory.createEmptyBorder(8, 12, 8, 12)));
             }
         });
 
         receivedField.setHorizontalAlignment(JTextField.RIGHT);
-        receivedField.setPreferredSize(new Dimension(280, 55)); // More reasonable size
-        receivedField.setMinimumSize(new Dimension(250, 50));
-        receivedField.setMaximumSize(new Dimension(320, 60));
+        receivedField.setPreferredSize(new Dimension(250, 45));
+        receivedField.setMinimumSize(new Dimension(220, 40));
+        receivedField.setMaximumSize(new Dimension(280, 50));
 
         panel.add(receivedField, gbc);
 
-        // Enhanced Change amount display with beautiful styling
+        // Change amount display
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.weightx = 0.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.ipadx = 0;
         JLabel changeLabelText = new JLabel("💴 Change:");
         changeLabelText.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
-        changeLabelText.setPreferredSize(new Dimension(200, 40)); // Ensure adequate width for full text
+        changeLabelText.setPreferredSize(new Dimension(200, 40));
         changeLabelText.setMinimumSize(new Dimension(180, 35));
         panel.add(changeLabelText, gbc);
 
@@ -260,25 +190,15 @@ public class PaymentDialog extends JDialog {
         gbc.weightx = 0.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         changeLabel = new JLabel("฿0.00");
-        changeLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 26)); // Appropriate font size
+        changeLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 22));
         changeLabel.setForeground(IconManager.PRIMARY_COLOR);
         changeLabel.setOpaque(true);
-        changeLabel.setBackground(new Color(240, 248, 255));
-
-        // Create beautiful multi-layered border with gradient effect
+        changeLabel.setBackground(new Color(248, 249, 250));
+        changeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        changeLabel.setPreferredSize(new Dimension(200, 45));
         changeLabel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createCompoundBorder(
-                        // Outer shadow border
-                        BorderFactory.createLineBorder(new Color(200, 220, 240), 2),
-                        // Middle gradient border
-                        BorderFactory.createLineBorder(new Color(180, 210, 255), 1)),
-                BorderFactory.createEmptyBorder(15, 20, 15, 20) // Reasonable padding
-        ));
-
-        changeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        changeLabel.setPreferredSize(new Dimension(280, 65)); // Increased size to ensure full content visibility
-        changeLabel.setMinimumSize(new Dimension(250, 60));
-        changeLabel.setMaximumSize(new Dimension(320, 70));
+                BorderFactory.createRaisedBevelBorder(),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)));
         panel.add(changeLabel, gbc);
 
         return panel;
@@ -474,12 +394,11 @@ public class PaymentDialog extends JDialog {
                 }
 
                 double receivedAmount = Double.parseDouble(amountText);
-                double totalWithTax = totalAmount * 1.07;
 
-                if (receivedAmount < totalWithTax) {
+                if (receivedAmount < totalAmount) {
                     JOptionPane.showMessageDialog(this,
                             String.format("Insufficient payment amount.\nRequired: ฿%.2f\nReceived: ฿%.2f",
-                                    totalWithTax, receivedAmount),
+                                    totalAmount, receivedAmount),
                             "Insufficient Payment",
                             JOptionPane.WARNING_MESSAGE);
                     receivedField.requestFocus();
@@ -487,7 +406,7 @@ public class PaymentDialog extends JDialog {
                 }
 
                 // Calculate change before completing payment
-                double changeAmount = receivedAmount - totalWithTax;
+                double changeAmount = receivedAmount - totalAmount;
 
                 paymentCompleted = true;
 
@@ -495,7 +414,7 @@ public class PaymentDialog extends JDialog {
                 controller.setReceivedAmount(receivedAmount);
                 controller.completeSale(receivedAmount);
 
-                // Update UI for receipt printing (removed change popup)
+                // Update UI for receipt printing
                 showPaymentSuccess();
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this,
@@ -529,7 +448,6 @@ public class PaymentDialog extends JDialog {
             }
 
             double receivedAmount = Double.parseDouble(text);
-            double totalWithTax = totalAmount * 1.07; // Calculate total with tax in method scope
 
             // Only calculate if received amount is greater than 0
             if (receivedAmount <= 0) {
@@ -541,11 +459,11 @@ public class PaymentDialog extends JDialog {
                 return false;
             }
 
-            if (receivedAmount >= totalWithTax) {
-                double change = receivedAmount - totalWithTax;
+            if (receivedAmount >= totalAmount) {
+                double change = receivedAmount - totalAmount;
                 changeLabel.setText(String.format("฿%.2f", change));
 
-                // Enhanced visual feedback with better colors and animations
+                // Enhanced visual feedback with better colors
                 if (change == 0) {
                     // Exact payment - blue theme
                     changeLabel.setForeground(new Color(52, 152, 219)); // Bright blue
@@ -561,7 +479,7 @@ public class PaymentDialog extends JDialog {
                 payButton.setEnabled(true);
                 return true;
             } else {
-                double shortage = totalWithTax - receivedAmount;
+                double shortage = totalAmount - receivedAmount;
                 changeLabel.setText(String.format("Need ฿%.2f more!", shortage));
                 changeLabel.setForeground(new Color(231, 76, 60)); // Bright red
                 changeLabel.setBackground(new Color(255, 235, 235)); // Light red background

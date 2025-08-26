@@ -115,16 +115,15 @@ public class POSController {
         try {
             // Create receipt printer for later use
             double totalAmount = mainFrame.getCartPanel().getTotalAmount();
-            double totalWithTax = totalAmount * 1.07; // Calculate total including tax
-            double changeAmount = receivedAmount > 0 ? receivedAmount - totalWithTax : 0;
+            double changeAmount = receivedAmount > 0 ? receivedAmount - totalAmount : 0;
             lastReceiptPrinter = new ReceiptPrinter(
                     new HashMap<>(currentCart), // Create copy for receipt
                     totalAmount,
                     receivedAmount,
                     changeAmount);
 
-            // Record the sale in sales tracker - use totalWithTax for consistency
-            salesTracker.recordSale(new HashMap<>(currentCart), totalWithTax, receivedAmount, changeAmount);
+            // Record the sale in sales tracker
+            salesTracker.recordSale(new HashMap<>(currentCart), totalAmount, receivedAmount, changeAmount);
 
             // Generate daily summary after each sale
             salesTracker.generateDailySummary();

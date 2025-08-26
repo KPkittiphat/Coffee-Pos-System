@@ -75,9 +75,7 @@ public class ReceiptPrinter implements Printable {
         // Totals
         int totalItems = cartItems.values().stream().mapToInt(CartItem::getQuantity).sum();
         receipt.append(String.format("Total Items: %d\n", totalItems));
-        receipt.append(String.format("Subtotal: ฿%.2f\n", totalAmount));
-        receipt.append(String.format("Tax (7%%): ฿%.2f\n", totalAmount * 0.07));
-        receipt.append(String.format("TOTAL: ฿%.2f\n", totalAmount * 1.07));
+        receipt.append(String.format("TOTAL: ฿%.2f\n", totalAmount));
         receipt.append(repeatString("-", 50)).append("\n");
 
         // Payment

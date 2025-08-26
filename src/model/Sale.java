@@ -66,7 +66,7 @@ public class Sale {
             sb.append(entry.getKey()).append(" x").append(entry.getValue()).append(", ");
         }
         if (!items.isEmpty()) {
-            sb.setLength(sb.length() - 2); // Remove last comma and space
+            sb.setLength(sb.length() - 2);
         }
         sb.append("\nTotal: ฿").append(String.format("%.2f", totalAmount));
         return sb.toString();
